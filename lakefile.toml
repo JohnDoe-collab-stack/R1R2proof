@@ -1,0 +1,7 @@
+name = "R1R2proof"
+version = "0.1.0"
+defaultTargets = ["R1R2proof"]
+
+[[lean_lib]]
+name = "R1R2proof"
+roots = ["R1R2proof", "RegimesSelfContained"]
