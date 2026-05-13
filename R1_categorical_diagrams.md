@@ -6,7 +6,7 @@ This file gives an informal categorical reading of the R1 regime isolated in:
 
 ```text
 RegimesSelfContained.lean
-local_closure_regimes.md
+Local_closure_regimes.md
 ```
 
 It is not yet a categorical formalization in Lean. Its purpose is to fix the
