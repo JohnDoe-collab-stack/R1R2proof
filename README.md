@@ -154,6 +154,10 @@ RegimesSelfContained.lean
 DynamicRegimesSelfContained.lean
   Dynamic standalone R1/R2 framework.
 
+R1R2Notation.lean
+  Lean notation layer for observational identity, R2 fracture, and mediated
+  identity.
+
 PeanoPAFormulaAxioms.lean
   Static formula-level PA instance and exact dimension-2 certificates.
 
@@ -165,6 +169,10 @@ Local_closure_regimes.md
 
 Foundational_questions.md
   Status note for PA and set-theory questions.
+
+Notation.md
+  Notation for observational identity, mediated identity, and exact finite
+  refinement.
 
 R1_categorical_diagrams.md
 R2_categorical_diagrams.md
