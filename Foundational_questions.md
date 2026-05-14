@@ -14,3 +14,51 @@ In the terminology of `RegimesSelfContained.lean`, these questions ask whether
 the corresponding formal systems merely certify internal coherence of an
 explicit presentation, or whether they also provide certified local closure of
 the required distinctions through the R2 residual and mediator structure.
+
+## Current PA Status
+
+For Peano arithmetic, the current formal answer is no longer just a question.
+The files
+
+```text
+PeanoPAFormulaAxioms.lean
+PeanoPAFormulaAxiomsDynamic.lean
+```
+
+formalize PA as syntax of first-order formulas:
+
+```text
+0, S, +, *
+equality, negation, implication, conjunction, universal quantification
+six standard PA axiom formulas
+the induction schema
+```
+
+The proved structural result is:
+
+```text
+The R1 trace projection sees PA axiom/component families and parameters.
+It does not see the R2 base/step coordinate.
+That coordinate appears as a diagonal residual.
+A Fin 2 mediator separates the residual.
+The exact proper mediated R2 dimension is 2.
+```
+
+Thus, for the formula-level PA instance currently in the repository:
+
+```text
+PA under the trace projection is an R1 presentation that does not itself
+access the R2 base/step coordinate.
+
+The R2 coordinate is supplied by a certified minimal mediator.
+```
+
+This is a syntactic theorem about PA formulas and components.  It is not a
+claim that PA is semantically false, nor a complete metatheory of first-order
+logic.
+
+## Current Set-Theory Status
+
+The enriched set-theory question remains a target question.  No corresponding
+formula-level ZFC or enriched set-theory instance is currently formalized in
+this repository.

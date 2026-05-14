@@ -5,6 +5,13 @@ import RegimesSelfContained
 
 This file is a fresh, formula-level Peano instance.
 
+The R1/R2 framework proves a structural theorem about PA formalized as formula
+syntax.  The R1 trace projection reduces PA axioms/components to their families
+and parameters, but this projection does not access the R2 base/step
+coordinate.  That coordinate appears as a diagonal residual and is separated by
+a dimension-minimal `Fin 2` R2 mediator, with exact proper mediated dimension
+`2`.
+
 The objects are not Lean axioms and they are not informal labels.  They are
 first-order syntax trees:
 

@@ -1,7 +1,7 @@
 import RegimesSelfContained
 import DynamicRegimesSelfContained
-import PeanoAxiomLevel
-import PeanoAxiomLevelDynamic
+import PeanoPAFormulaAxioms
+import PeanoPAFormulaAxiomsDynamic
 
 /-!
 Root module for the `R1R2proof` Lake project.

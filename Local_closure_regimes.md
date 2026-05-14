@@ -374,7 +374,7 @@ R2 asks:
 ```text
 pi(x) = y
 because the required distinction supporting that decision
-is accessible or has been made accessible by certified mediation.
+is preserved directly or separated by certified mediation.
 ```
 
 The difference is not:
@@ -469,10 +469,10 @@ projection.
 It establishes:
 
 ```text
-the distinction is not accessible to the marginals;
-the coalition of interfaces gives access;
-this access cannot be recovered from a proper subfamily;
-the diagonal witness is closed by this access.
+the distinction is not separated by the marginals;
+the mediator separates it;
+the mediator cannot be recovered from a proper subfamily;
+the diagonal witness is closed by this mediated separation.
 ```
 
 Abstract form:
@@ -548,7 +548,7 @@ R2
 
   What is certified:
     required distinctions are preserved
-    or made accessible by certified local closure.
+    or separated by certified local closure.
 ```
 
 ## 8. Compact Form

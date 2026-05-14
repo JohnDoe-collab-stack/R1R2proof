@@ -6,6 +6,13 @@ import PeanoPAFormulaAxioms
 
 This file is the dynamic companion of `PeanoPAFormulaAxioms.lean`.
 
+The R1/R2 framework proves a structural theorem about PA formalized as formula
+syntax.  The R1 trace projection reduces PA axioms/components to their families
+and parameters, but this projection does not access the R2 base/step
+coordinate.  That coordinate appears as a diagonal residual and is separated by
+a dimension-minimal `Fin 2` R2 mediator, with exact proper mediated dimension
+`2`.
+
 It operates on the formula-level Peano objects:
 
 * `PAFormulaAxiom`, whose main field is an actual first-order `Formula`;
