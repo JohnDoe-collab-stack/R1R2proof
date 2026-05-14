@@ -950,6 +950,51 @@ def ExistsProperMediatedR2CertificateAtDim
     (I : Subfamily J) (n : Nat) : Prop :=
   ∃ M : S → Fin n, ProperMediatedR2Certificate obs sigma I M
 
+/-- Every point of `Fin 1` has value zero. -/
+theorem fin_one_val_eq_zero (a : Fin 1) : a.val = 0 := by
+  cases a with
+  | mk av ah =>
+      cases av with
+      | zero =>
+          rfl
+      | succ av =>
+          have hLtZero : av < 0 :=
+            Nat.lt_of_succ_lt_succ ah
+          exact False.elim (Nat.not_lt_zero av hLtZero)
+
+/-- Any two points of `Fin 1` are equal, constructively. -/
+theorem fin_one_eq (a b : Fin 1) : a = b := by
+  apply Fin.ext
+  cases a with
+  | mk av ah =>
+      cases b with
+      | mk bv bh =>
+          exact (fin_one_val_eq_zero ⟨av, ah⟩).trans
+            (fin_one_val_eq_zero ⟨bv, bh⟩).symm
+
+/-- No proper mediated R2 certificate exists in dimension `0`. -/
+theorem no_properMediatedR2CertificateAtDim_zero
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
+    (obs : J → S → V) (sigma : S → Y) (I : Subfamily J) :
+    ¬ ExistsProperMediatedR2CertificateAtDim obs sigma I 0 := by
+  intro hExists
+  rcases hExists with ⟨M, hCert⟩
+  rcases hCert.residual_exists with ⟨x, _y, _hResidual⟩
+  exact Fin.elim0 (M x)
+
+/-- No proper mediated R2 certificate exists in dimension `1`. -/
+theorem no_properMediatedR2CertificateAtDim_one
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
+    (obs : J → S → V) (sigma : S → Y) (I : Subfamily J) :
+    ¬ ExistsProperMediatedR2CertificateAtDim obs sigma I 1 := by
+  intro hExists
+  rcases hExists with ⟨M, hCert⟩
+  rcases hCert.residual_exists with ⟨x, y, hResidual⟩
+  have hM : M x = M y := fin_one_eq (M x) (M y)
+  have hMediatedResidual : MediatedResidual obs sigma I M x y :=
+    ⟨hResidual.1, ⟨hResidual.2, hM⟩⟩
+  exact hCert.closes x y hMediatedResidual
+
 /--
 Exact finite mediated dimension: a mediated certificate exists at `n`, and no
 mediated certificate exists at any strictly smaller dimension.
@@ -1072,6 +1117,53 @@ theorem no_smaller_properMediatedR2Certificate_of_exactProperDimension
       m < n → ¬ ExistsProperMediatedR2CertificateAtDim obs sigma I m := by
   intro hExact hm
   exact hExact.no_smaller m hm
+
+/-- An exact proper mediated R2 dimension is at least two. -/
+theorem one_lt_dim_of_exactProperMediatedR2Dimension
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
+    (obs : J → S → V) (sigma : S → Y)
+    (I : Subfamily J) (n : Nat) :
+    ExactProperMediatedR2Dimension obs sigma I n → 1 < n := by
+  intro hExact
+  cases n with
+  | zero =>
+      exact False.elim
+        ((no_properMediatedR2CertificateAtDim_zero obs sigma I)
+          hExact.exists_at)
+  | succ n =>
+      cases n with
+      | zero =>
+          exact False.elim
+            ((no_properMediatedR2CertificateAtDim_one obs sigma I)
+              hExact.exists_at)
+      | succ n =>
+          exact Nat.succ_lt_succ (Nat.succ_pos n)
+
+/-- A dimension-minimal proper mediated R2 certificate has dimension at least two. -/
+theorem one_lt_dim_of_dimensionMinimalProperMediatedR2Certificate
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z} {n : Nat}
+    (obs : J → S → V) (sigma : S → Y)
+    (I : Subfamily J) (M : S → Fin n) :
+    DimensionMinimalProperMediatedR2Certificate obs sigma I M →
+      1 < n := by
+  intro hMinimal
+  exact one_lt_dim_of_exactProperMediatedR2Dimension obs sigma I n
+    (exactProperMediatedR2Dimension_of_dimensionMinimalProperCertificate
+      hMinimal)
+
+/--
+A dimension-minimal witnessed proper mediated R2 certificate has dimension at
+least two.
+-/
+theorem one_lt_dim_of_dimensionMinimalWitnessedProperMediatedR2Certificate
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z} {n : Nat}
+    (obs : J → S → V) (sigma : S → Y)
+    (I : Subfamily J) (M : S → Fin n) :
+    DimensionMinimalWitnessedProperMediatedR2Certificate obs sigma I M →
+      1 < n := by
+  intro hMinimal
+  exact one_lt_dim_of_dimensionMinimalProperMediatedR2Certificate
+    obs sigma I M (dimensionMinimalProper_of_witnessed hMinimal)
 
 /--
 End-to-end static proper R2 certificate: residual present before mediation,
@@ -1914,28 +2006,6 @@ theorem not_compatDimLe_zero_of_stepSeparatesFiber
   rcases hDim with ⟨M, _pred, _hFactors⟩
   exact Fin.elim0 (M x)
 
-/-- Every point of `Fin 1` has value zero. -/
-theorem fin_one_val_eq_zero (a : Fin 1) : a.val = 0 := by
-  cases a with
-  | mk av ah =>
-      cases av with
-      | zero =>
-          rfl
-      | succ av =>
-          have hLtZero : av < 0 :=
-            Nat.lt_of_succ_lt_succ ah
-          exact False.elim (Nat.not_lt_zero av hLtZero)
-
-/-- Any two points of `Fin 1` are equal, constructively. -/
-theorem fin_one_eq (a b : Fin 1) : a = b := by
-  apply Fin.ext
-  cases a with
-  | mk av ah =>
-      cases b with
-      | mk bv bh =>
-          exact (fin_one_val_eq_zero ⟨av, ah⟩).trans
-            (fin_one_val_eq_zero ⟨bv, bh⟩).symm
-
 /--
 A separated compatibility fiber cannot be classified through a one-dimensional
 finite readout.
@@ -2393,6 +2463,10 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.properMediatedR2Certificate_not_closed_R2
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.ExistsMediatedR2CertificateAtDim
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.ExistsProperMediatedR2CertificateAtDim
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.fin_one_val_eq_zero
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.fin_one_eq
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.no_properMediatedR2CertificateAtDim_zero
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.no_properMediatedR2CertificateAtDim_one
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.ExactMediatedR2Dimension
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.ExactProperMediatedR2Dimension
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.DimensionMinimalMediatedR2Certificate
@@ -2403,6 +2477,9 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.exactProperMediatedR2Dimension_of_dimensionMinimalProperCertificate
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.no_smaller_mediatedR2Certificate_of_exactDimension
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.no_smaller_properMediatedR2Certificate_of_exactProperDimension
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.one_lt_dim_of_exactProperMediatedR2Dimension
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.one_lt_dim_of_dimensionMinimalProperMediatedR2Certificate
+#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.one_lt_dim_of_dimensionMinimalWitnessedProperMediatedR2Certificate
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.endToEnd_staticProperMediatedR2Certificate
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.endToEnd_staticWitnessedProperMediatedR2Certificate
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.mediatedResidualEmpty_iff_mediator_separates_witnesses
@@ -2457,8 +2534,6 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.jointSame_of_subset
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.subfamilyPrediction_excluded_of_stepSeparatesFiber
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.not_compatDimLe_zero_of_stepSeparatesFiber
-#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.fin_one_val_eq_zero
-#print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.fin_one_eq
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.not_compatDimLe_one_of_stepSeparatesFiber
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.positive_dim_of_familyIrreducibleCompatibilityProfile
 #print axioms LocalSemanticClosure.Standalone.DynamicRegimesSelfContained.one_lt_dim_of_familyIrreducibleCompatibilityProfile
