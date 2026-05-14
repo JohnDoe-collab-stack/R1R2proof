@@ -913,14 +913,11 @@ theorem properMediatedR2Certificate.toMediatedR2Certificate
 /-- A nonempty residual rules out direct R2 closure. -/
 theorem residualNonempty_not_closed_R2
     {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
-    [DecidableEq Y]
     (obs : J → S → V) (sigma : S → Y) (I : Subfamily J) :
     ResidualNonempty_R2 obs sigma I → ¬ Closed_R2 obs sigma I := by
   intro hNonempty hClosed
   rcases hNonempty with ⟨x, y, hResidual⟩
-  have hEmpty : ResidualEmpty_R2 obs sigma I :=
-    (closed_R2_iff_residualEmpty obs sigma I).1 hClosed
-  exact hEmpty x y hResidual
+  exact hResidual.1 (hClosed x y hResidual.2)
 
 /--
 A proper mediated certificate proves that the original regime was not already
@@ -928,7 +925,6 @@ directly closed.
 -/
 theorem properMediatedR2Certificate_not_closed_R2
     {J : Type u} {S : Type v} {V : Type w} {Y : Type z} {n : Nat}
-    [DecidableEq Y]
     (obs : J → S → V) (sigma : S → Y)
     (I : Subfamily J) (M : S → Fin n) :
     ProperMediatedR2Certificate obs sigma I M →
@@ -1690,7 +1686,7 @@ theorem stepwiseProperMediatedR2Certificate_of_uniform
 /-- A uniform proper dynamic certificate rules out direct closure at each step. -/
 theorem uniformProperMediatedR2Certificate_not_closed_at_step
     {J : Type u} {S : Type v} {V : Type w} {Step : Type a} {Y : Type z}
-    [DecidableEq Y] {n : Nat}
+    {n : Nat}
     (obs : J → S → V) (target : DynamicTarget S Step Y)
     (I : Subfamily J) (M : Step → S → Fin n) :
     UniformProperMediatedR2Certificate obs target I M →
