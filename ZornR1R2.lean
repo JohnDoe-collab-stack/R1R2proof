@@ -36,6 +36,12 @@ Thus Zorn's conclusion can be read as the existence of a point where every
 R1-admissible extension has already collapsed to the same R2 value as the
 base point.
 
+In this reading, Zorn/choice polarizes the symmetric R1 field of admissible
+extensions.  Before the terminal point is chosen, R1 treats local admissible
+extensions as observationally identical.  At a terminal point `p`, the point
+itself becomes a pole: every still-admissible extension has the same R2 value
+as the base extension at `p`.
+
 The second part adds the temporal layer.  A dynamic Zorn certificate is not
 just a terminal static maximal point: it also contains a trajectory/history
 bounded by the terminal point.  The file proves that this dynamic certificate
