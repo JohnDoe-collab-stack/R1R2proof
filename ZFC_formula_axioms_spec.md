@@ -470,9 +470,8 @@ ZFCAllAxiomFiniteState n
 Implemented R1 observations include:
 
 ```text
-component trace
-axiom family
-component role
+separate family reader
+separate component-role reader
 ```
 
 Implemented R2 targets include:

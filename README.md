@@ -135,7 +135,9 @@ object and finite families of actual Separation and Replacement formula
 components.  These finite states are not arbitrary formula/coordinate pairs:
 the formula is determined by the Separation or Replacement constructor and its
 finite coordinate.  Full ZFC axioms are present as certified formulas, without
-receiving arbitrary finite labels.  The file proves:
+receiving arbitrary finite labels.  The R1 interface uses separate family and
+component-role readers, so the irreducibility statements apply to the isolated
+family-only and role-only marginal subfamilies.  The file proves:
 
 ```text
 exactMediatedR2Dimension_n_ZFC_finite

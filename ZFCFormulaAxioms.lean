@@ -9,7 +9,7 @@ presentation of ZFC.
 
 ZFC is used here as an R1 presentation: its axioms and schema instances are
 encoded as actual first-order `Formula` trees in the pure language of set
-theory.  The R1 trace reads the visible ZFC family/role data of formula
+theory.  The R1 interface has separate family and role readers for formula
 components.  The R2 target reads a finite parameter coordinate carried by
 actual Separation and Replacement schema instances.
 
@@ -802,32 +802,84 @@ def zfcFiniteReplacementParameterComponent {n : Nat}
     (i : Fin n) : ZFCFiniteParameterComponent n :=
   ZFCFiniteParameterComponent.replacement i
 
-/-- R1 trace for finite ZFC parameter components. -/
+/-- Combined trace data for finite ZFC parameter components. -/
 structure ZFCFiniteTrace where
   family : AxiomFamily
   role : ZFCComponentRole
 deriving DecidableEq
 
-/-- The singleton interface for the finite ZFC certificate. -/
+/-- Individual R1 observations for finite ZFC parameter components. -/
+inductive ZFCFiniteObservation
+  | family : AxiomFamily → ZFCFiniteObservation
+  | role : ZFCComponentRole → ZFCFiniteObservation
+deriving DecidableEq
+
+/-- The separated family/role interface for the finite ZFC certificate. -/
 inductive ZFCFiniteInterface
-  | componentTrace
+  | familyTrace
+  | roleTrace
 deriving DecidableEq
 
 /-- Active R1 family for the finite ZFC certificate. -/
 def I_ZFC_finite : Subfamily ZFCFiniteInterface
-  | ZFCFiniteInterface.componentTrace => True
+  | ZFCFiniteInterface.familyTrace => True
+  | ZFCFiniteInterface.roleTrace => True
+
+/-- Marginal subfamily that keeps only the ZFC family reader. -/
+def I_ZFC_family_only : Subfamily ZFCFiniteInterface
+  | ZFCFiniteInterface.familyTrace => True
+  | ZFCFiniteInterface.roleTrace => False
+
+/-- Marginal subfamily that keeps only the component-role reader. -/
+def I_ZFC_role_only : Subfamily ZFCFiniteInterface
+  | ZFCFiniteInterface.familyTrace => False
+  | ZFCFiniteInterface.roleTrace => True
+
+/-- The family-only reader is a proper active subfamily. -/
+theorem family_only_proper_ZFC_finite :
+    Subfamily.Proper I_ZFC_family_only I_ZFC_finite := by
+  constructor
+  · intro j hj
+    cases j
+    · trivial
+    · cases hj
+  · exact
+      ⟨ZFCFiniteInterface.roleTrace,
+        trivial,
+        by
+          intro h
+          cases h⟩
+
+/-- The role-only reader is a proper active subfamily. -/
+theorem role_only_proper_ZFC_finite :
+    Subfamily.Proper I_ZFC_role_only I_ZFC_finite := by
+  constructor
+  · intro j hj
+    cases j
+    · cases hj
+    · trivial
+  · exact
+      ⟨ZFCFiniteInterface.familyTrace,
+        trivial,
+        by
+          intro h
+          cases h⟩
 
 /--
 R1 observation on ZFC formula components.
 
-It reads the ZFC axiom family and component role.  It does not read the exact
-formula object and it does not read the finite parameter coordinate.
+It has separate readers for the ZFC axiom family and the component role.  It
+does not read the exact formula object and it does not read the finite
+parameter coordinate.
 -/
 def obs_ZFC_finite {n : Nat} :
-    ZFCFiniteInterface → ZFCFiniteParameterComponent n → ZFCFiniteTrace
-  | ZFCFiniteInterface.componentTrace, s =>
-      { family := (componentOfZFCFiniteParameterComponent s).family
-        role := (componentOfZFCFiniteParameterComponent s).role }
+    ZFCFiniteInterface → ZFCFiniteParameterComponent n → ZFCFiniteObservation
+  | ZFCFiniteInterface.familyTrace, s =>
+      ZFCFiniteObservation.family
+        (componentOfZFCFiniteParameterComponent s).family
+  | ZFCFiniteInterface.roleTrace, s =>
+      ZFCFiniteObservation.role
+        (componentOfZFCFiniteParameterComponent s).role
 
 /-- R2 target: the finite parameter coordinate. -/
 def sigma_ZFC_finite {n : Nat}
@@ -882,8 +934,7 @@ theorem jointSame_zfcFiniteParameterComponents
       (zfcFiniteParameterComponent i)
       (zfcFiniteParameterComponent j) := by
   intro k _hk
-  cases k
-  rfl
+  cases k <;> rfl
 
 /-- The canonical pair is separated by the R2 target. -/
 theorem requiredAtCanonicalPair_ZFC_finite
@@ -939,28 +990,16 @@ theorem M_ZFC_finite_separates_canonicalPair
       M_ZFC_finite (canonicalPair_ZFC_finite h).2 :=
   zfcFirstCoordinate_ne_secondCoordinate h
 
-/-- A proper subfamily omits the single component-trace interface. -/
-theorem not_mem_of_proper_ZFC_finite_subfamily
-    (K : Subfamily ZFCFiniteInterface) :
-    Subfamily.Proper K I_ZFC_finite →
-      ¬ K ZFCFiniteInterface.componentTrace := by
-  intro hProper
-  rcases hProper.2 with ⟨j, _hjI, hjNotK⟩
-  cases j
-  exact hjNotK
-
 /-- The canonical pair is indistinguishable for every proper active subfamily. -/
 theorem jointSameAtCanonicalPair_ZFC_finite_of_properSubfamily
     {n : Nat} (h : 1 < n)
     (K : Subfamily ZFCFiniteInterface)
-    (hProper : Subfamily.Proper K I_ZFC_finite) :
+    (_hProper : Subfamily.Proper K I_ZFC_finite) :
     JointSame (obs_ZFC_finite (n := n)) K
       (canonicalPair_ZFC_finite h).1
       (canonicalPair_ZFC_finite h).2 := by
   intro j hj
-  cases j
-  exact False.elim
-    ((not_mem_of_proper_ZFC_finite_subfamily K hProper) hj)
+  cases j <;> rfl
 
 /-- Explicit non-descent witness for every proper active subfamily. -/
 theorem witnessedIrreducibleMediator_M_ZFC_finite
@@ -985,6 +1024,30 @@ theorem irreducibleMediator_M_ZFC_finite
     (obs_ZFC_finite (n := n)) I_ZFC_finite
     (M_ZFC_finite (n := n))
     (witnessedIrreducibleMediator_M_ZFC_finite h)
+
+/-- The finite mediator does not descend to the family-only marginal. -/
+theorem no_descent_family_only_ZFC_finite
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_finite (n := n)) I_ZFC_family_only
+      (M_ZFC_finite (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_finite (n := n)) I_ZFC_finite I_ZFC_family_only
+    (M_ZFC_finite (n := n))
+    (irreducibleMediator_M_ZFC_finite h)
+    family_only_proper_ZFC_finite
+
+/-- The finite mediator does not descend to the role-only marginal. -/
+theorem no_descent_role_only_ZFC_finite
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_finite (n := n)) I_ZFC_role_only
+      (M_ZFC_finite (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_finite (n := n)) I_ZFC_finite I_ZFC_role_only
+    (M_ZFC_finite (n := n))
+    (irreducibleMediator_M_ZFC_finite h)
+    role_only_proper_ZFC_finite
 
 /-- The finite ZFC formula components give a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_finite
@@ -1187,8 +1250,7 @@ theorem jointSame_zfcFiniteReplacementParameterComponents
       (zfcFiniteReplacementParameterComponent i)
       (zfcFiniteReplacementParameterComponent j) := by
   intro k _hk
-  cases k
-  rfl
+  cases k <;> rfl
 
 /-- The canonical Replacement pair is separated by the R2 target. -/
 theorem requiredAtCanonicalPair_ZFC_replacement_finite
@@ -1239,14 +1301,12 @@ theorem M_ZFC_replacement_finite_separates_canonicalPair
 theorem jointSameAtCanonicalPair_ZFC_replacement_finite_of_properSubfamily
     {n : Nat} (h : 1 < n)
     (K : Subfamily ZFCFiniteInterface)
-    (hProper : Subfamily.Proper K I_ZFC_finite) :
+    (_hProper : Subfamily.Proper K I_ZFC_finite) :
     JointSame (obs_ZFC_finite (n := n)) K
       (canonicalPair_ZFC_replacement_finite h).1
       (canonicalPair_ZFC_replacement_finite h).2 := by
   intro j hj
-  cases j
-  exact False.elim
-    ((not_mem_of_proper_ZFC_finite_subfamily K hProper) hj)
+  cases j <;> rfl
 
 /-- Explicit non-descent witness for every proper active subfamily. -/
 theorem witnessedIrreducibleMediator_M_ZFC_replacement_finite
@@ -1272,6 +1332,30 @@ theorem irreducibleMediator_M_ZFC_replacement_finite
     (obs_ZFC_finite (n := n)) I_ZFC_finite
     (M_ZFC_finite (n := n))
     (witnessedIrreducibleMediator_M_ZFC_replacement_finite h)
+
+/-- The Replacement mediator does not descend to the family-only marginal. -/
+theorem no_descent_family_only_ZFC_replacement_finite
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_finite (n := n)) I_ZFC_family_only
+      (M_ZFC_finite (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_finite (n := n)) I_ZFC_finite I_ZFC_family_only
+    (M_ZFC_finite (n := n))
+    (irreducibleMediator_M_ZFC_replacement_finite h)
+    family_only_proper_ZFC_finite
+
+/-- The Replacement mediator does not descend to the role-only marginal. -/
+theorem no_descent_role_only_ZFC_replacement_finite
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_finite (n := n)) I_ZFC_role_only
+      (M_ZFC_finite (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_finite (n := n)) I_ZFC_finite I_ZFC_role_only
+    (M_ZFC_finite (n := n))
+    (irreducibleMediator_M_ZFC_replacement_finite h)
+    role_only_proper_ZFC_finite
 
 /-- The finite ZFC Replacement formula components give a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_replacement_finite
@@ -1504,8 +1588,11 @@ def traceOfZFCAllAxiomFiniteState
 
 /-- R1 observation on the full ZFC axiom carrier. -/
 def obs_ZFC_all {n : Nat} :
-    ZFCFiniteInterface → ZFCAllAxiomFiniteState n → ZFCFiniteTrace
-  | ZFCFiniteInterface.componentTrace, s => traceOfZFCAllAxiomFiniteState s
+    ZFCFiniteInterface → ZFCAllAxiomFiniteState n → ZFCFiniteObservation
+  | ZFCFiniteInterface.familyTrace, s =>
+      ZFCFiniteObservation.family (traceOfZFCAllAxiomFiniteState s).family
+  | ZFCFiniteInterface.roleTrace, s =>
+      ZFCFiniteObservation.role (traceOfZFCAllAxiomFiniteState s).role
 
 /-- R2 target on the full ZFC axiom carrier. -/
 def sigma_ZFC_all {n : Nat}
@@ -1542,8 +1629,7 @@ theorem jointSame_zfcAllParameterComponents
       (ZFCAllAxiomFiniteState.parameterComponent i)
       (ZFCAllAxiomFiniteState.parameterComponent j) := by
   intro k _hk
-  cases k
-  rfl
+  cases k <;> rfl
 
 /-- The full-carrier canonical pair is separated by the R2 target. -/
 theorem requiredAtCanonicalPair_ZFC_all
@@ -1606,14 +1692,12 @@ by
 theorem jointSameAtCanonicalPair_ZFC_all_of_properSubfamily
     {n : Nat} (h : 1 < n)
     (K : Subfamily ZFCFiniteInterface)
-    (hProper : Subfamily.Proper K I_ZFC_finite) :
+    (_hProper : Subfamily.Proper K I_ZFC_finite) :
     JointSame (obs_ZFC_all (n := n)) K
       (canonicalPair_ZFC_all h).1
       (canonicalPair_ZFC_all h).2 := by
   intro j hj
-  cases j
-  exact False.elim
-    ((not_mem_of_proper_ZFC_finite_subfamily K hProper) hj)
+  cases j <;> rfl
 
 /-- Explicit non-descent witness for every proper subfamily in the full carrier. -/
 theorem witnessedIrreducibleMediator_M_ZFC_all
@@ -1638,6 +1722,30 @@ theorem irreducibleMediator_M_ZFC_all
     (obs_ZFC_all (n := n)) I_ZFC_finite
     (M_ZFC_all (n := n))
     (witnessedIrreducibleMediator_M_ZFC_all h)
+
+/-- The full-carrier mediator does not descend to the family-only marginal. -/
+theorem no_descent_family_only_ZFC_all
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_all (n := n)) I_ZFC_family_only
+      (M_ZFC_all (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_all (n := n)) I_ZFC_finite I_ZFC_family_only
+    (M_ZFC_all (n := n))
+    (irreducibleMediator_M_ZFC_all h)
+    family_only_proper_ZFC_finite
+
+/-- The full-carrier mediator does not descend to the role-only marginal. -/
+theorem no_descent_role_only_ZFC_all
+    {n : Nat} (h : 1 < n) :
+    ¬ MediatorDescendsSubfamily
+      (obs_ZFC_all (n := n)) I_ZFC_role_only
+      (M_ZFC_all (n := n)) :=
+  irreducibleMediator_nonDescends_properSubfamily
+    (obs_ZFC_all (n := n)) I_ZFC_finite I_ZFC_role_only
+    (M_ZFC_all (n := n))
+    (irreducibleMediator_M_ZFC_all h)
+    role_only_proper_ZFC_finite
 
 /-- The full ZFC carrier gives a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_all
@@ -1849,10 +1957,15 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.zfcParameterReplacementFormula
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.zfcParameterReplacementAxiom
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.ZFCFiniteParameterComponent
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.ZFCFiniteObservation
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.I_ZFC_family_only
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.I_ZFC_role_only
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.obs_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.sigma_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.M_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_finite
@@ -1864,6 +1977,8 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.exactProperMediatedR2Dimension_n_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.endToEnd_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_replacement_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_replacement_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_replacement_finite
@@ -1881,6 +1996,8 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.sigma_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.M_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_all
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_all
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_all

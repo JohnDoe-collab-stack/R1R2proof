@@ -84,7 +84,9 @@ The full carrier includes every certified ZFC axiom object and both finite
 schema-component families.  The finite schema-component formulas are determined
 by their constructors and coordinates; they are not arbitrary formula/label
 pairs.  Full ZFC axiom objects are embedded as certified formulas, without
-arbitrary finite labels.  The theorem
+arbitrary finite labels.  The R1 interface uses separate family and
+component-role readers, so family-only and role-only marginal subfamilies are
+tested explicitly by non-descent theorems.  The theorem
 
 ```text
 exactMediatedR2Dimension_n_ZFC_all
