@@ -45,10 +45,8 @@ The file proves that:
 
 Thus the certified invariant is:
 
-```text
 minimal joint R2 mediator of exact dimension n,
 inaccessible to proper marginal subfamilies taken in isolation.
-```
 
 The ZFC side supplies genuine formula objects.  The R1/R2 side supplies the
 external structural invariant: residual, mediated closure, irreducibility, and
