@@ -287,8 +287,14 @@ proves:
 
 ```text
 externallyAligned_of_bridge
+externallyAligned_observedStep_of_bridge
 exactProperMediatedR2Dimension_n_external_observedStep
 ```
+
+The current external bridge models the observation-only collapse case:
+terminal and prompt observations are constant over `RawState`.  The exact
+dimension result therefore concerns the residual left by visible
+terminal/prompt observation when the finite causal coordinate is not read.
 
 This Lean theorem is structural.  Empirical ASLMT work supplies evidence only
 by constructing or approximating such a bridge for concrete logs or systems.

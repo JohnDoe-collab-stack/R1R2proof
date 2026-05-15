@@ -992,6 +992,26 @@ theorem dynamicExactProperMediatedR2Dimension_n_external_at_step
   exact exactProperMediatedR2Dimension_n_external_at_step B h step
 
 /--
+Observed-step external package: exact dimension at the designated step and
+blocked descent to each visible marginal reader.
+-/
+theorem externallyAligned_observedStep_of_bridge
+    {n : Nat} (B : ExternalAlignmentBridge n) (h : 1 < n) :
+    ExactProperMediatedR2Dimension
+        (externalObs B) ((externalTarget B).targetAt B.observedStep)
+        I_alignment n
+      ∧ ¬ MediatorDescendsSubfamily
+          (externalObs B) I_alignment_terminal_only
+          (externalM B B.observedStep)
+      ∧ ¬ MediatorDescendsSubfamily
+          (externalObs B) I_alignment_prompt_only
+          (externalM B B.observedStep) := by
+  exact
+    ⟨exactProperMediatedR2Dimension_n_external_observedStep B h,
+      no_descent_terminal_only_external B h B.observedStep,
+      no_descent_prompt_only_external B h B.observedStep⟩
+
+/--
 External alignedness: an external carrier is aligned when the supplied bridge
 closes the same dynamic R1/R2 residual with exact dimension `n`.
 -/
@@ -1092,6 +1112,7 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.exactProperMediatedR2Dimension_n_external_at_step
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.exactProperMediatedR2Dimension_n_external_observedStep
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.dynamicExactProperMediatedR2Dimension_n_external_at_step
+#print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.externallyAligned_observedStep_of_bridge
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.ExternallyAligned
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.externallyAligned_of_bridge
 #print axioms LocalSemanticClosure.LLMAlignmentDynamicR1R2.endToEnd_aligned_alignment

@@ -8,10 +8,10 @@ This file instantiates the R1/R2 framework on an explicit syntax-level
 presentation of ZFC.
 
 ZFC is used here as an R1 presentation: its axioms and schema instances are
-encoded as actual first-order `Formula` trees in the pure language of set
+encoded as explicit first-order `Formula` trees in the pure language of set
 theory.  The R1 interface has separate family and role readers for formula
 components.  The R2 target reads a finite parameter coordinate carried by
-actual Separation and Replacement schema instances.
+explicit Separation and Replacement schema instances.
 
 The objects are not Lean axioms and they are not informal labels.  They are
 first-order syntax trees with:
@@ -52,7 +52,24 @@ The ZFC side supplies genuine formula objects.  The R1/R2 side supplies the
 external structural invariant: residual, mediated closure, irreducibility, and
 exact minimal dimension.
 
-No quotient, no `Classical`, no `propext`.
+The method is to treat the ZFC axioms and certified formula components as a
+structured syntactic carrier, then project them through an R1/R2
+observation/target structure.  The R1 level keeps only the axiom family and
+the observable syntactic role, while the R2 level requires a finite coordinate
+to remain distinguished.  Separation and Replacement then provide
+parameterized families whose instances can have the same R1 trace while
+carrying distinct coordinates.
+
+The residual consists of component pairs identified by R1 and distinguished by
+R2.  Its closure is obtained by a finite mediator `M : S -> Fin n`, which adds
+exactly the missing coordinate.  The proof then establishes exact minimality:
+every lower-dimensional mediation fails to separate all required instances.
+
+Thus the ZFC axioms are used as a formal support for constructing a measurable
+informational residual and proving a precise dimensional lower bound on the
+information needed for R2 closure.
+
+Constructive throughout: quotient-free, `Classical`-free, and `propext`-free.
 -/
 
 namespace LocalSemanticClosure
