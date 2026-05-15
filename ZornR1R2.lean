@@ -134,6 +134,16 @@ theorem observationalIdentity_base_extension
   cases j
   rfl
 
+/-- The same R1 identity in the reverse order. -/
+theorem observationalIdentity_extension_base
+    {P : Type u} {le : P → P → Prop}
+    (hRefl : ∀ p : P, le p p) (p : P)
+    (x : ExtensionCarrier le p) :
+    x ≡ᵢ[obs le p, I_extension] base hRefl p := by
+  intro j _hj
+  cases j
+  rfl
+
 /-- Local R1/R2 closure is exactly maximality. -/
 theorem localR1R2Closed_iff_maximal
     {P : Type u} (le : P → P → Prop)
@@ -192,7 +202,7 @@ theorem residualNonempty_of_strictLocalExtension
   exact
     ⟨x, base hRefl p,
       hFrac,
-      observationalIdentity_base_extension hRefl p x⟩
+      observationalIdentity_extension_base hRefl p x⟩
 
 /-- A nonempty local R1/R2 residual gives a strict local extension. -/
 theorem strictLocalExtension_of_residualNonempty
@@ -455,6 +465,8 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZornR1R2.ZornPrinciple
 #print axioms LocalSemanticClosure.ZornR1R2.ExtensionCarrier
 #print axioms LocalSemanticClosure.ZornR1R2.LocalR1R2Closed
+#print axioms LocalSemanticClosure.ZornR1R2.observationalIdentity_base_extension
+#print axioms LocalSemanticClosure.ZornR1R2.observationalIdentity_extension_base
 #print axioms LocalSemanticClosure.ZornR1R2.localR1R2Closed_iff_maximal
 #print axioms LocalSemanticClosure.ZornR1R2.existsMaximal_iff_existsLocalR1R2Closed
 #print axioms LocalSemanticClosure.ZornR1R2.zorn_as_r1r2_closure
