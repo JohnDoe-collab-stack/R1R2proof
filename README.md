@@ -255,6 +255,44 @@ active target, active pair, mediator behavior, and residual profile.  It is not
 an empirical learning system and does not encode a historical world-model
 training process.
 
+## Dynamic LLM/R1R2 Alignment Instance
+
+`LLMAlignmentDynamicR1R2.lean` instantiates the dynamic R1/R2 framework on an
+abstract causal-trajectory alignment carrier.
+
+For every `n >= 2`, every dynamic step has exact proper mediated R2 dimension
+`n`.  The dynamic target reads a step-relative injective transform of the
+trajectory coordinate, and the mediator reads the same coordinate.
+
+The file also separates full trajectory mediation from Boolean compatibility
+classification:
+
+```text
+trajectory mediation dimension      = n
+compatibility classifier dimension  = 2
+```
+
+The file defines `Aligned h`, a formal alignedness predicate for the abstract
+dynamic carrier, and proves:
+
+```text
+endToEnd_aligned_alignment
+```
+
+It also defines `ExternalAlignmentBridge`, a bridge from an external carrier
+to the formal R1/R2 trajectory interface.  A bridge supplies raw states, raw
+steps, an observed raw step, a finite causal coordinate, representatives for
+every coordinate, and injective step transforms.  From such a bridge the file
+proves:
+
+```text
+externallyAligned_of_bridge
+exactProperMediatedR2Dimension_n_external_observedStep
+```
+
+This Lean theorem is structural.  Empirical ASLMT work supplies evidence only
+by constructing or approximating such a bridge for concrete logs or systems.
+
 ## File Map
 
 ```text
@@ -285,6 +323,11 @@ ZFCFormulaAxioms.lean
   Syntax-level ZFC axiom formulas in the pure first-order language of set
   theory, including Separation, Replacement, and Choice, plus finite
   exact-dimension R1/R2 certificates on formula-bearing ZFC carriers.
+
+LLMAlignmentDynamicR1R2.lean
+  Dynamic alignment carrier, exact trajectory mediation dimension n, Boolean
+  compatibility dimension 2, and external bridge theorem for raw systems with
+  finite causal coordinates.
 
 ZFC_formula_axioms_spec.md
   Specification for the single-file ZFC formula-level target and its R1/R2
