@@ -1,12 +1,33 @@
 # R1R2proof
 
-Self-contained Lean 4 development for the R1/R2 residual-mediation
-framework, with a formula-level Peano arithmetic instance.
+A standalone Lean 4 development of the R1/R2 residual-mediation framework,
+with a formula-level Peano arithmetic instance and exact dimension-2 mediated
+certificates.
 
 The project does not import mathlib.  It is intended to be auditable as a
 small standalone Lake project.
 
-## Main Result
+## Core Notation
+
+```text
+R1-identity:
+  x ≡ᵢ y
+
+R2-fracture:
+  sigma(x) and sigma(y) are distinct
+
+M-refined identity:
+  x ≡ᵢ,ₘ y := x ≡ᵢ y and M(x) = M(y)
+```
+
+In Lean, the notation is parameterized explicitly:
+
+```lean
+x ≡ᵢ[obs, I] y
+x ≡ᵢ,ₘ[obs, I, M] y
+```
+
+## Main Theorem
 
 The repository formalizes a structural distinction between two regimes:
 
@@ -25,19 +46,32 @@ six standard first-order PA axiom formulas
 the induction schema
 ```
 
-The proved structural theorem is:
+The content is the relative obstruction:
 
 ```text
-The R1 trace projection sees PA axiom/component families and parameters.
-It does not see the R2 base/step coordinate.
-That coordinate appears as a diagonal residual.
-A Fin 2 mediator separates the residual.
-The exact proper mediated R2 dimension is 2.
+The R1 trace projection identifies the relevant PA family data while leaving
+the base/step coordinate unresolved.
+
+This unresolved coordinate forms a diagonal R2 residual.
+
+The exact proper mediated R2 dimension of this residual is 2.
 ```
 
-This is a syntactic theorem about PA formulas and PA formula components.  It is
-not a claim that PA is semantically false, and it is not a complete
-formalization of first-order proof theory or model theory.
+Equivalently: the theorem is not the bare existence of a map into `Fin 2`, nor
+the observation that a base/step pair can be encoded by two values.  It proves
+that, relative to the chosen R1 trace projection, the base/step coordinate
+survives as an R2 residual, and that the smallest proper mediated closure of
+this residual has exact finite dimension `2`.
+
+In the PA instance, this exact dimension is realized by the phase mediator.
+The mediator matters because it is certified as minimal relative to the R1
+trace projection, not because `Fin 2` is by itself a surprising codomain.
+
+This is a syntactic structural theorem about PA formula objects and formula
+components.  Its intended role is to certify a residual-mediation phenomenon
+inside a standalone Lean development.  It is not a claim that PA is
+semantically false, and it is not a complete formalization of first-order proof
+theory or model theory.
 
 ## What Is Formalized
 
