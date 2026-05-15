@@ -1,8 +1,8 @@
 # R1R2proof
 
 A standalone Lean 4 development of the R1/R2 residual-mediation framework,
-with a formula-level Peano arithmetic instance and exact dimension-2 mediated
-certificates.
+with a formula-level Peano arithmetic instance, exact dimension-2 mediated
+certificates, and a finite hierarchy of exact mediated dimensions.
 
 The project does not import mathlib.  It is intended to be auditable as a
 small standalone Lake project.
@@ -72,6 +72,38 @@ components.  Its intended role is to certify a residual-mediation phenomenon
 inside a standalone Lean development.  It is not a claim that PA is
 semantically false, and it is not a complete formalization of first-order proof
 theory or model theory.
+
+## Finite Dimension Hierarchy
+
+The framework is not tied to the binary PA base/step case.
+
+`FiniteDimensionHierarchy.lean` proves that exact mediated R2 dimensions occur
+in every finite dimension `n >= 2`.  For each such `n`, it constructs a finite
+R1/R2 instance whose exact proper mediated R2 dimension is exactly `n`.
+
+The structure of the proof is:
+
+```text
+R1 identifies all states through a trivial trace.
+
+R2 requires distinct states to remain distinct.
+
+Any mediator closing the residual must separate all states.
+
+Therefore any mediator into Fin m induces an injection Fin n -> Fin m.
+
+If m < n, such an injection is constructively impossible.
+
+Dimension n is achieved by the identity mediator Fin n -> Fin n.
+```
+
+So the PA base/step certificate is one structured dimension-`2` instance of a
+general finite hierarchy.  The broader invariant is:
+
+```text
+R2 mediation measures the minimal finite dimension needed to separate the
+residual left by an R1 projection.
+```
 
 ## What Is Formalized
 
@@ -192,6 +224,10 @@ R1R2Notation.lean
   Lean notation layer for observational identity, R2 fracture, and mediated
   identity.
 
+FiniteDimensionHierarchy.lean
+  Parametric exact-dimension family: for every n >= 2, a finite R1/R2
+  instance with exact proper mediated R2 dimension n.
+
 PeanoPAFormulaAxioms.lean
   Static formula-level PA instance and exact dimension-2 certificates.
 
@@ -249,6 +285,13 @@ R2 mediator:
 Exact dimension:
   no proper mediated certificate exists in dimension 0 or 1;
   dimension 2 is achieved.
+```
+
+It also contains a parametric finite hierarchy:
+
+```text
+for every n >= 2,
+there is a finite R1/R2 instance with exact proper mediated R2 dimension n.
 ```
 
 The repository does not yet contain:

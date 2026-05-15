@@ -1,6 +1,7 @@
 import RegimesSelfContained
 import DynamicRegimesSelfContained
 import R1R2Notation
+import FiniteDimensionHierarchy
 import PeanoPAFormulaAxioms
 import PeanoPAFormulaAxiomsDynamic
 
