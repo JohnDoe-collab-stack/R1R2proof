@@ -78,14 +78,21 @@ ZFCFormulaComponent
 ZFCAllAxiomFiniteState n
 ```
 
-For every `n >= 2`, the full carrier includes every certified ZFC axiom object
-and a finite family of actual Separation formula components.  The theorem
+For every `n >= 2`, the file gives finite exact-dimension certificates from
+actual Separation formula components and actual Replacement formula components.
+The full carrier includes every certified ZFC axiom object and both finite
+schema-component families.  The finite schema-component formulas are determined
+by their constructors and coordinates; they are not arbitrary formula/label
+pairs.  Full ZFC axiom objects are embedded as certified formulas, without
+arbitrary finite labels.  The theorem
 
 ```text
+exactMediatedR2Dimension_n_ZFC_all
 exactProperMediatedR2Dimension_n_ZFC_all
 ```
 
-proves exact proper mediated R2 dimension `n`.
+proves exact mediated R2 dimension `n`, and also exact proper mediated R2
+dimension `n`.
 
 This is a syntactic structural certificate about ZFC formula objects.  It is
 not a semantic theorem about models of ZFC or a proof-theoretic metatheorem.

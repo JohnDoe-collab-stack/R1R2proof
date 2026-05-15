@@ -131,15 +131,24 @@ ZFCAllAxiomFiniteState n
 ```
 
 For every `n >= 2`, the full ZFC carrier contains every certified ZFC axiom
-object and a finite family of actual Separation formula components.  The file
-proves:
+object and finite families of actual Separation and Replacement formula
+components.  These finite states are not arbitrary formula/coordinate pairs:
+the formula is determined by the Separation or Replacement constructor and its
+finite coordinate.  Full ZFC axioms are present as certified formulas, without
+receiving arbitrary finite labels.  The file proves:
 
 ```text
+exactMediatedR2Dimension_n_ZFC_finite
+exactProperMediatedR2Dimension_n_ZFC_finite
+exactMediatedR2Dimension_n_ZFC_replacement_finite
+exactProperMediatedR2Dimension_n_ZFC_replacement_finite
+exactMediatedR2Dimension_n_ZFC_all
 exactProperMediatedR2Dimension_n_ZFC_all
 ```
 
-So the ZFC section gives an exact proper mediated R2 dimension `n` theorem on
-a carrier that still contains the full syntax-level ZFC axiom presentation.
+So the ZFC section gives exact mediated R2 dimension `n`, and also exact
+proper mediated R2 dimension `n`, on carriers that still contain the
+syntax-level ZFC axiom presentation.
 
 ## What Is Formalized
 
@@ -343,8 +352,9 @@ It also contains a ZFC formula-level instance:
 
 ```text
 for every n >= 2,
-the full ZFC formula carrier with finite Separation components has exact
-proper mediated R2 dimension n.
+finite ZFC Separation components, finite ZFC Replacement components, and the
+full ZFC formula carrier containing both have exact mediated R2 dimension n
+and exact proper mediated R2 dimension n.
 ```
 
 The repository does not yet contain:

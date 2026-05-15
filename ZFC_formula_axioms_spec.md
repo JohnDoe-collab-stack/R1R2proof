@@ -396,7 +396,6 @@ structure ReplacementSideConditions where ...
 structure ReplacementData where ...
 
 inductive AxiomFamily
-inductive ZFCSchemaRole
 inductive ZFCComponentRole
 
 def zfcExtensionalityFormula : Formula := ...
@@ -434,8 +433,9 @@ structure ZFCFormulaComponent where
   role : ZFCComponentRole
 
 inductive ZFCAllAxiomFiniteState (n : Nat)
-  | axiom : Fin n -> ZFCFormulaAxiom -> ZFCAllAxiomFiniteState n
+  | axiom : 0 < n -> ZFCFormulaAxiom -> ZFCAllAxiomFiniteState n
   | parameterComponent : Fin n -> ZFCAllAxiomFiniteState n
+  | replacementParameterComponent : Fin n -> ZFCAllAxiomFiniteState n
 
 end ZFCFormulaAxioms
 end LocalSemanticClosure
@@ -444,6 +444,12 @@ end LocalSemanticClosure
 The component type is required in the same file if the R1/R2 certificate is
 implemented there.  It must still carry actual `Formula` objects; it must not
 replace formulas with component labels.
+
+The finite schema-component states must not store an arbitrary
+`component/coordinate` pair.  The constructor must determine the actual
+Separation or Replacement formula from the finite coordinate.  Full ZFC axiom
+states must not receive arbitrary finite labels either; in the full carrier,
+the finite coordinate is carried by the schema-component constructors.
 
 ## R1/R2 Section After Syntax
 
@@ -538,7 +544,11 @@ certificates operate directly on formula-bearing ZFC objects.
 The implemented theorem package includes, for every `n >= 2`:
 
 ```text
+exactMediatedR2Dimension_n_ZFC_finite
 exactProperMediatedR2Dimension_n_ZFC_finite
+exactMediatedR2Dimension_n_ZFC_replacement_finite
+exactProperMediatedR2Dimension_n_ZFC_replacement_finite
+exactMediatedR2Dimension_n_ZFC_all
 exactProperMediatedR2Dimension_n_ZFC_all
 endToEnd_ZFC_all
 ```
