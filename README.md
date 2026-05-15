@@ -105,6 +105,40 @@ R2 mediation measures the minimal finite dimension needed to separate the
 residual left by an R1 projection.
 ```
 
+## Gödel-Style Proof/Truth Bridge
+
+`GodelR1R2Bridge.lean` formalizes the abstract bridge from proof-theoretic
+undecidability to the R1/R2 language.  It does not prove Gödel's
+incompleteness theorem.  Instead, it proves that once a Gödel-style local
+proof/truth pair is supplied, it produces an R1/R2 residual.
+
+The local bridge uses a sentence `delta` and its negation:
+
+```text
+R1 reads proof status.
+R2 reads truth status.
+delta and neg delta have the same R1 proof-status observation.
+delta and neg delta have different R2 truth-status values.
+```
+
+The file proves:
+
+```text
+r2IndecidableForR1_of_localProofTheoreticIndecidable
+residualNonempty_of_localProofTheoreticIndecidable
+exactProperMediatedR2Dimension_two
+endToEnd_godelPair
+```
+
+Thus the two-state Gödel pair gives:
+
+```text
+proof/truth R2 residual
+mediated closure by Fin 2
+exact proper mediated dimension 2
+witnessed irreducibility
+```
+
 ## ZFC Formula Instance
 
 `ZFCFormulaAxioms.lean` formalizes ZFC in the pure first-order language of set
@@ -137,7 +171,9 @@ the formula is determined by the Separation or Replacement constructor and its
 finite coordinate.  Full ZFC axioms are present as certified formulas, without
 receiving arbitrary finite labels.  The R1 interface uses separate family and
 component-role readers, so the irreducibility statements apply to the isolated
-family-only and role-only marginal subfamilies.  The file proves:
+family-only and role-only marginal subfamilies.  The mediator is therefore a
+joint mediator: it closes the R2 residual from the combined R1 trace, while it
+does not descend to either isolated marginal.  The file proves:
 
 ```text
 exactMediatedR2Dimension_n_ZFC_finite
@@ -146,11 +182,16 @@ exactMediatedR2Dimension_n_ZFC_replacement_finite
 exactProperMediatedR2Dimension_n_ZFC_replacement_finite
 exactMediatedR2Dimension_n_ZFC_all
 exactProperMediatedR2Dimension_n_ZFC_all
+jointMediator_inaccessible_to_isolatedMarginals_ZFC_finite
+jointMediator_inaccessible_to_isolatedMarginals_ZFC_replacement_finite
+jointMediator_inaccessible_to_isolatedMarginals_ZFC_all
 ```
 
 So the ZFC section gives exact mediated R2 dimension `n`, and also exact
 proper mediated R2 dimension `n`, on carriers that still contain the
-syntax-level ZFC axiom presentation.
+syntax-level ZFC axiom presentation.  It also names the isolated-marginal
+obstruction directly: the joint mediator is inaccessible from the family-only
+reader and from the role-only reader taken separately.
 
 ## What Is Formalized
 
@@ -255,50 +296,6 @@ active target, active pair, mediator behavior, and residual profile.  It is not
 an empirical learning system and does not encode a historical world-model
 training process.
 
-## Dynamic LLM/R1R2 Alignment Instance
-
-`LLMAlignmentDynamicR1R2.lean` instantiates the dynamic R1/R2 framework on an
-abstract causal-trajectory alignment carrier.
-
-For every `n >= 2`, every dynamic step has exact proper mediated R2 dimension
-`n`.  The dynamic target reads a step-relative injective transform of the
-trajectory coordinate, and the mediator reads the same coordinate.
-
-The file also separates full trajectory mediation from Boolean compatibility
-classification:
-
-```text
-trajectory mediation dimension      = n
-compatibility classifier dimension  = 2
-```
-
-The file defines `Aligned h`, a formal alignedness predicate for the abstract
-dynamic carrier, and proves:
-
-```text
-endToEnd_aligned_alignment
-```
-
-It also defines `ExternalAlignmentBridge`, a bridge from an external carrier
-to the formal R1/R2 trajectory interface.  A bridge supplies raw states, raw
-steps, an observed raw step, a finite causal coordinate, representatives for
-every coordinate, and injective step transforms.  From such a bridge the file
-proves:
-
-```text
-externallyAligned_of_bridge
-externallyAligned_observedStep_of_bridge
-exactProperMediatedR2Dimension_n_external_observedStep
-```
-
-The current external bridge models the observation-only collapse case:
-terminal and prompt observations are constant over `RawState`.  The exact
-dimension result therefore concerns the residual left by visible
-terminal/prompt observation when the finite causal coordinate is not read.
-
-This Lean theorem is structural.  Empirical ASLMT work supplies evidence only
-by constructing or approximating such a bridge for concrete logs or systems.
-
 ## File Map
 
 ```text
@@ -329,11 +326,6 @@ ZFCFormulaAxioms.lean
   Syntax-level ZFC axiom formulas in the pure first-order language of set
   theory, including Separation, Replacement, and Choice, plus finite
   exact-dimension R1/R2 certificates on formula-bearing ZFC carriers.
-
-LLMAlignmentDynamicR1R2.lean
-  Dynamic alignment carrier, exact trajectory mediation dimension n, Boolean
-  compatibility dimension 2, and external bridge theorem for raw systems with
-  finite causal coordinates.
 
 ZFC_formula_axioms_spec.md
   Specification for the single-file ZFC formula-level target and its R1/R2

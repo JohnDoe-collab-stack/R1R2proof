@@ -36,12 +36,12 @@ The mediator has type `S -> Fin n` for the relevant carrier `S`.
 The file proves that:
 
 * the original ZFC R1 trace leaves a nonempty R2 residual;
-* the mediator closes that residual;
+* the joint mediator closes that residual;
 * every smaller mediator `S -> Fin m`, with `m < n`, fails;
-* the mediator is irreducible: every proper active subfamily loses access to
-  the mediating coordinate;
+* the joint mediator is irreducible: every proper active subfamily loses
+  access to the mediating coordinate;
 * in witnessed form, each proper marginal subfamily has explicit states that
-  it still identifies while the mediator separates them.
+  it still identifies while the joint mediator separates them.
 
 Thus the certified invariant is:
 
@@ -1064,6 +1064,22 @@ theorem no_descent_role_only_ZFC_finite
     (irreducibleMediator_M_ZFC_finite h)
     role_only_proper_ZFC_finite
 
+/--
+The finite joint mediator is inaccessible to the isolated family-only and
+role-only marginals.
+-/
+theorem jointMediator_inaccessible_to_isolatedMarginals_ZFC_finite
+    {n : Nat} (h : 1 < n) :
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_finite (n := n)) I_ZFC_family_only
+        (M_ZFC_finite (n := n)))
+      ∧
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_finite (n := n)) I_ZFC_role_only
+        (M_ZFC_finite (n := n))) :=
+  ⟨no_descent_family_only_ZFC_finite h,
+    no_descent_role_only_ZFC_finite h⟩
+
 /-- The finite ZFC formula components give a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_finite
     {n : Nat} (h : 1 < n) :
@@ -1371,6 +1387,22 @@ theorem no_descent_role_only_ZFC_replacement_finite
     (M_ZFC_finite (n := n))
     (irreducibleMediator_M_ZFC_replacement_finite h)
     role_only_proper_ZFC_finite
+
+/--
+The Replacement joint mediator is inaccessible to the isolated family-only and
+role-only marginals.
+-/
+theorem jointMediator_inaccessible_to_isolatedMarginals_ZFC_replacement_finite
+    {n : Nat} (h : 1 < n) :
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_finite (n := n)) I_ZFC_family_only
+        (M_ZFC_finite (n := n)))
+      ∧
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_finite (n := n)) I_ZFC_role_only
+        (M_ZFC_finite (n := n))) :=
+  ⟨no_descent_family_only_ZFC_replacement_finite h,
+    no_descent_role_only_ZFC_replacement_finite h⟩
 
 /-- The finite ZFC Replacement formula components give a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_replacement_finite
@@ -1762,6 +1794,22 @@ theorem no_descent_role_only_ZFC_all
     (irreducibleMediator_M_ZFC_all h)
     role_only_proper_ZFC_finite
 
+/--
+The full-carrier joint mediator is inaccessible to the isolated family-only
+and role-only marginals.
+-/
+theorem jointMediator_inaccessible_to_isolatedMarginals_ZFC_all
+    {n : Nat} (h : 1 < n) :
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_all (n := n)) I_ZFC_family_only
+        (M_ZFC_all (n := n)))
+      ∧
+    (¬ MediatorDescendsSubfamily
+        (obs_ZFC_all (n := n)) I_ZFC_role_only
+        (M_ZFC_all (n := n))) :=
+  ⟨no_descent_family_only_ZFC_all h,
+    no_descent_role_only_ZFC_all h⟩
+
 /-- The full ZFC carrier gives a proper mediated R2 certificate. -/
 theorem properMediatedR2Certificate_M_ZFC_all
     {n : Nat} (h : 1 < n) :
@@ -1981,6 +2029,7 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.jointMediator_inaccessible_to_isolatedMarginals_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_finite
@@ -1994,6 +2043,7 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_replacement_finite
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.jointMediator_inaccessible_to_isolatedMarginals_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_replacement_finite
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_replacement_finite
@@ -2013,6 +2063,7 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.canonicalDiagonalWitness_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_family_only_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_descent_role_only_ZFC_all
+#print axioms LocalSemanticClosure.ZFCFormulaAxioms.jointMediator_inaccessible_to_isolatedMarginals_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.properMediatedR2Certificate_M_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.witnessedProperMediatedR2Certificate_M_ZFC_all
 #print axioms LocalSemanticClosure.ZFCFormulaAxioms.no_smaller_mediatedR2Certificate_ZFC_all

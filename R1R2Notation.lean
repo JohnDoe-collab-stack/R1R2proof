@@ -99,6 +99,31 @@ theorem diagonalizationWitness_iff_r2Fracture_and_observationalIdentity
   rfl
 
 /--
+R2 is undecidable from R1, in the local informational sense, when one R1
+identity class contains an R2 fracture.
+
+This is the notation-level form of residual nonemptiness.  It is not a
+proof-theoretic Gödel undecidability statement.
+-/
+abbrev R2IndecidableForR1
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
+    (obs : J → S → V) (sigma : S → Y)
+    (I : Subfamily J) : Prop :=
+  ∃ x y : S, R2Fracture sigma x y ∧ (x ≡ᵢ[obs, I] y)
+
+/--
+The local informational statement “R2 is undecidable from R1” is exactly
+nonemptiness of the R2 residual.
+-/
+theorem r2IndecidableForR1_iff_residualNonempty
+    {J : Type u} {S : Type v} {V : Type w} {Y : Type z}
+    (obs : J → S → V) (sigma : S → Y)
+    (I : Subfamily J) :
+    R2IndecidableForR1 obs sigma I ↔
+      ResidualNonempty_R2 obs sigma I := by
+  rfl
+
+/--
 A mediated residual is exactly an R2 fracture that remains after the mediated
 identity refinement.
 -/
@@ -158,6 +183,8 @@ end LocalSemanticClosure
 #print axioms LocalSemanticClosure.R1R2Notation.observationalIdentity_iff_jointSame
 #print axioms LocalSemanticClosure.R1R2Notation.mediatedIdentity_iff_observationalIdentity_and_mediator
 #print axioms LocalSemanticClosure.R1R2Notation.diagonalizationWitness_iff_r2Fracture_and_observationalIdentity
+#print axioms LocalSemanticClosure.R1R2Notation.R2IndecidableForR1
+#print axioms LocalSemanticClosure.R1R2Notation.r2IndecidableForR1_iff_residualNonempty
 #print axioms LocalSemanticClosure.R1R2Notation.mediatedResidual_iff_r2Fracture_and_mediatedIdentity
 #print axioms LocalSemanticClosure.R1R2Notation.mediatedResidual_of_diagonalizationWitness_and_mediator_same
 #print axioms LocalSemanticClosure.R1R2Notation.diagonalizationWitness_of_mediatedResidual
