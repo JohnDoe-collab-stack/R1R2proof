@@ -2,12 +2,19 @@ import RegimesSelfContained
 import FiniteDimensionHierarchy
 
 /-!
-# ZFC formula axioms
+# ZFC formula axioms and exact R1/R2 mediated dimension
 
-This file is the syntax-level ZFC target.
+This file instantiates the R1/R2 framework on an explicit syntax-level
+presentation of ZFC.
+
+ZFC is used here as an R1 presentation: its axioms and schema instances are
+encoded as actual first-order `Formula` trees in the pure language of set
+theory.  The R1 trace reads the visible ZFC family/role data of formula
+components.  The R2 target reads a finite parameter coordinate carried by
+actual Separation and Replacement schema instances.
 
 The objects are not Lean axioms and they are not informal labels.  They are
-first-order syntax trees in the pure language of set theory:
+first-order syntax trees with:
 
 * variables as terms;
 * equality and membership as atomic formulas;
@@ -17,8 +24,35 @@ first-order syntax trees in the pure language of set theory:
   Choice.
 
 The schema constructors store explicit variable-role and freshness conditions.
-The R1/R2 certificate layer below is added only after these formula objects are
+The R1/R2 certificate layer is added only after these formula objects are
 available, and it operates on formula-bearing ZFC objects.
+
+Main result:
+
+For every `n >= 2`, the ZFC formula-component carriers below have exact
+mediated R2 dimension `n`, and also exact proper mediated R2 dimension `n`.
+The mediator has type `S -> Fin n` for the relevant carrier `S`.
+
+The file proves that:
+
+* the original ZFC R1 trace leaves a nonempty R2 residual;
+* the mediator closes that residual;
+* every smaller mediator `S -> Fin m`, with `m < n`, fails;
+* the mediator is irreducible: every proper active subfamily loses access to
+  the mediating coordinate;
+* in witnessed form, each proper marginal subfamily has explicit states that
+  it still identifies while the mediator separates them.
+
+Thus the certified invariant is:
+
+```text
+minimal joint R2 mediator of exact dimension n,
+inaccessible to proper marginal subfamilies taken in isolation.
+```
+
+The ZFC side supplies genuine formula objects.  The R1/R2 side supplies the
+external structural invariant: residual, mediated closure, irreducibility, and
+exact minimal dimension.
 
 No quotient, no `Classical`, no `propext`.
 -/
