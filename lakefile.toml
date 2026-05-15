@@ -4,4 +4,4 @@ defaultTargets = ["R1R2proof"]
 
 [[lean_lib]]
 name = "R1R2proof"
-roots = ["R1R2proof", "RegimesSelfContained", "DynamicRegimesSelfContained", "R1R2Notation", "GodelR1R2Bridge", "FiniteDimensionHierarchy", "PeanoPAFormulaAxioms", "PeanoPAFormulaAxiomsDynamic", "ZFCFormulaAxioms"]
+roots = ["R1R2proof", "RegimesSelfContained", "DynamicRegimesSelfContained", "R1R2Notation", "GodelR1R2Bridge", "ZornR1R2", "FiniteDimensionHierarchy", "PeanoPAFormulaAxioms", "PeanoPAFormulaAxiomsDynamic", "ZFCFormulaAxioms"]

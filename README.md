@@ -139,6 +139,28 @@ exact proper mediated dimension 2
 witnessed irreducibility
 ```
 
+## Zorn R1/R2 Closure
+
+`ZornR1R2.lean` does not reprove Zorn's lemma.  It takes the usual Zorn
+conclusion as an external principle and rewrites it in R1/R2 notation.
+
+The file proves:
+
+```text
+local R1/R2 closure at p  <->  p is maximal
+```
+
+It also adds the temporal layer.  A dynamic Zorn certificate is proved
+equivalent to:
+
+```text
+static terminal R1/R2 closure + compatible trajectory data
+```
+
+So the dynamic certificate preserves the complete trajectory it claims to
+carry.  A finite two-point example proves that forgetting the trajectory back
+to the terminal-only certificate is not injective.
+
 ## ZFC Formula Instance
 
 `ZFCFormulaAxioms.lean` formalizes ZFC in the pure first-order language of set
@@ -311,6 +333,15 @@ DynamicRegimesSelfContained.lean
 R1R2Notation.lean
   Lean notation layer for observational identity, R2 fracture, and mediated
   identity.
+
+GodelR1R2Bridge.lean
+  Proof/truth bridge: local Gödel-style data produces an R1/R2 residual and a
+  two-state exact proper mediated dimension-2 gap.
+
+ZornR1R2.lean
+  Zorn's conclusion as local R1/R2 closure, plus dynamic trajectory
+  preservation and a finite witness that terminal-only forgetting loses
+  trajectory information.
 
 FiniteDimensionHierarchy.lean
   Parametric exact-dimension family: for every n >= 2, a finite R1/R2

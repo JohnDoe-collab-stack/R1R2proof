@@ -2,6 +2,7 @@ import RegimesSelfContained
 import DynamicRegimesSelfContained
 import R1R2Notation
 import GodelR1R2Bridge
+import ZornR1R2
 import FiniteDimensionHierarchy
 import PeanoPAFormulaAxioms
 import PeanoPAFormulaAxiomsDynamic
