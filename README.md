@@ -1,8 +1,8 @@
 # R1R2proof
 
 A standalone Lean 4 development of the R1/R2 residual-mediation framework,
-with a formula-level Peano arithmetic instance, exact dimension-2 mediated
-certificates, and a finite hierarchy of exact mediated dimensions.
+with formula-level Peano arithmetic and ZFC instances, exact dimension-2 PA
+certificates, and finite exact-dimension ZFC certificates.
 
 The project does not import mathlib.  It is intended to be auditable as a
 small standalone Lake project.
@@ -104,6 +104,42 @@ general finite hierarchy.  The broader invariant is:
 R2 mediation measures the minimal finite dimension needed to separate the
 residual left by an R1 projection.
 ```
+
+## ZFC Formula Instance
+
+`ZFCFormulaAxioms.lean` formalizes ZFC in the pure first-order language of set
+theory:
+
+```text
+variables
+equality
+membership
+logical connectives
+universal and existential quantification
+```
+
+It defines the standard ZFC axiom formulas as syntax, including
+Extensionality, Empty Set, Pairing, Union, Power Set, Infinity, Separation,
+Replacement, Foundation, and Choice.
+
+The R1/R2 certificate in the same file operates on formula-bearing objects:
+
+```text
+ZFCFormulaAxiom
+ZFCFormulaComponent
+ZFCAllAxiomFiniteState n
+```
+
+For every `n >= 2`, the full ZFC carrier contains every certified ZFC axiom
+object and a finite family of actual Separation formula components.  The file
+proves:
+
+```text
+exactProperMediatedR2Dimension_n_ZFC_all
+```
+
+So the ZFC section gives an exact proper mediated R2 dimension `n` theorem on
+a carrier that still contains the full syntax-level ZFC axiom presentation.
 
 ## What Is Formalized
 
@@ -234,6 +270,15 @@ PeanoPAFormulaAxioms.lean
 PeanoPAFormulaAxiomsDynamic.lean
   Dynamic and temporal formula-level PA instance.
 
+ZFCFormulaAxioms.lean
+  Syntax-level ZFC axiom formulas in the pure first-order language of set
+  theory, including Separation, Replacement, and Choice, plus finite
+  exact-dimension R1/R2 certificates on formula-bearing ZFC carriers.
+
+ZFC_formula_axioms_spec.md
+  Specification for the single-file ZFC formula-level target and its R1/R2
+  certificate section.
+
 Local_closure_regimes.md
   Conceptual note explaining R1, R2, residuals, and mediated closure.
 
@@ -294,12 +339,19 @@ for every n >= 2,
 there is a finite R1/R2 instance with exact proper mediated R2 dimension n.
 ```
 
+It also contains a ZFC formula-level instance:
+
+```text
+for every n >= 2,
+the full ZFC formula carrier with finite Separation components has exact
+proper mediated R2 dimension n.
+```
+
 The repository does not yet contain:
 
 ```text
 a full formalized proof system for first-order logic
 a model theory of PA
-a formula-level ZFC or enriched set-theory instance
 an empirical world-model implementation
 ```
 

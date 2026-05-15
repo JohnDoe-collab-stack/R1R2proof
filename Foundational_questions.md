@@ -59,6 +59,33 @@ logic.
 
 ## Current Set-Theory Status
 
-The enriched set-theory question remains a target question.  No corresponding
-formula-level ZFC or enriched set-theory instance is currently formalized in
-this repository.
+The repository now contains the first syntax-level ZFC axiom file:
+
+```text
+ZFCFormulaAxioms.lean
+```
+
+It formalizes the pure first-order language of set theory and the standard ZFC
+axiom formulas, including Separation, Replacement, and Choice, as syntax
+objects.
+
+The same file now contains a ZFC R1/R2 certificate section.  It operates on
+formula-bearing ZFC objects, not on bare labels:
+
+```text
+ZFCFormulaAxiom
+ZFCFormulaComponent
+ZFCAllAxiomFiniteState n
+```
+
+For every `n >= 2`, the full carrier includes every certified ZFC axiom object
+and a finite family of actual Separation formula components.  The theorem
+
+```text
+exactProperMediatedR2Dimension_n_ZFC_all
+```
+
+proves exact proper mediated R2 dimension `n`.
+
+This is a syntactic structural certificate about ZFC formula objects.  It is
+not a semantic theorem about models of ZFC or a proof-theoretic metatheorem.
